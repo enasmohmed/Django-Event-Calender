@@ -1,0 +1,4 @@
+<h1>Event List</h1>
+{% for event in object_list %}
+ <a href="{% url 'event_detail' event.pk %}">{{ event }}</a>
+{% endfor %}
