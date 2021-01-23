@@ -1,0 +1,21 @@
+{% load static %}
+{% block body %}
+<h2>Profile Details</h2><br/>
+ <a href="{% url 'accounts:edit_profile' %}"> Edit Profile</a><br/><br/>
+ <a href="{% url 'accounts:password_reset' %}"> Change Password</a><br/><br/>
+<hr/>
+    {% if user.is_authenticated %}
+        {% if user.profile.image %}
+           <img src="{{ user.profile.image.url }}" style="width: 30%;">
+        {% else %}
+           <img src="{% static 'image/no_image.jpg' %}" style="width: 30%;">
+        {% endif %}
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+
+        <p>Address: {{ user.profile.address }}</p>
+        <p>Join Date: {{ user.profile.join_date }}</p>
+    {% else %}
+         <p>login to view your details </p>
+    {% endif %}
+{% endblock body %}
