@@ -1,27 +1,28 @@
-from django import http
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import request, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy, reverse
 from django.views import generic
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from eventcalender.forms import AddMemberForm
 from eventcalender.models import Event, EventMember
 
 
 # home page
 def home(request):
-    return render(request, 'home/index.html')
+    return render(request, 'home/event_list.html')
 
 
 # page event list view
-class EventListView(LoginRequiredMixin,ListView):
+class EventListView(ListView):
     model = Event
     template_name = 'home/event_list.html'
     context_object_name = 'eventlist'
+
 
 
 # create event view
@@ -29,7 +30,7 @@ class EventCreateView(LoginRequiredMixin,CreateView):
     fields = ['title', 'description','date', 'time']
     model = Event
     template_name = 'home/event_form.html'
-    success_url ="/list/"
+    success_url ="/event_list/"
 
     def form_valid(self, form):
         user = self.request.user
@@ -37,37 +38,37 @@ class EventCreateView(LoginRequiredMixin,CreateView):
         return super(EventCreateView, self).form_valid(form)
 
 
-
 # detail view event
-class EventDetailView(LoginRequiredMixin,DetailView):
-    model = Event
-    context_object_name = 'event_detail'
-    template_name = 'home/event_detail.html'
-    #
-    # def get_queryset(self):
-    #     return EventMember.objects.filter(user=self.kwargs['pk']).order_by('user')
+@login_required(login_url='accounts:login')
+def event_details(request, event_id):
+    event = Event.objects.get(id=event_id)
+    eventmember = EventMember.objects.filter(event=event)
+    context = {
+        'event': event,
+        'eventmember': eventmember
+    }
+    return render(request, 'home/event_detail.html', context)
+
 
 
 
 
 # update event
-class EventUpdateView(LoginRequiredMixin,UpdateView):
+class EventUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     fields = ("__all__")
     model = Event
     template_name = 'home/event_form.html'
-    success_url ="/list/"
+    success_url ="/event_list/"
     fields = ['title', 'description','date','time']
 
+    def test_func(self):
+        event = self.get_object()
+        if self.request.user == event.user:
+            return True
+        return False
 
 
-# delete event
-class EventDeleteView(LoginRequiredMixin,DeleteView):
-    model = Event
-    template_name = 'home/confirm_delete.html'
-    success_url = "/list/"
-
-
-# create event member
+# create amount of participants
 def add_eventmember(request, event_id):
     forms = AddMemberForm()
     if request.method == 'POST':
@@ -81,7 +82,7 @@ def add_eventmember(request, event_id):
                     event=event,
                     user=user
                 )
-                return redirect('eventcalender:home')
+                return redirect('eventcalender:list')
             else:
                 print('--------------User limit exceed!-----------------')
     context = {
@@ -90,10 +91,9 @@ def add_eventmember(request, event_id):
     return render(request, 'home/add_member.html', context)
 
 
-
+# delete event member
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
     template_name = 'home/confirm_delete.html'
-    success_url = reverse_lazy('eventcalender:home')
-    slug_field = 'event_id'
-    slug_url_kwarg = 'event_id'
+    success_url = reverse_lazy('eventcalender:list')
+    context_object_name = 'member'

@@ -1,5 +1,8 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
 {% block title %}
-Add EventMember
+Add Amount of Participants
 {% endblock %}
 
 {% block content %}
@@ -10,8 +13,8 @@ Add EventMember
 <form method="post">
   {% csrf_token %}
   <table class="form form-table">
-    {{ form }}
-    <tr><td colspan="2"><button type="submit"> Submit </button></td></tr>
+    {{ form| as_bootstrap }}
+    <tr><td colspan="2"><button class="btn btn-success" type="submit"> Submit </button></td></tr>
   </table>
 </form>
 {% endblock %}

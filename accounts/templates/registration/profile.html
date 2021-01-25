@@ -1,21 +1,69 @@
+{% extends "base.html" %}
 {% load static %}
-{% block body %}
+{% load bootstrap_tags %}
+{% block content %}
 <h2>Profile Details</h2><br/>
- <a href="{% url 'accounts:edit_profile' %}"> Edit Profile</a><br/><br/>
- <a href="{% url 'accounts:password_reset' %}"> Change Password</a><br/><br/>
-<hr/>
-    {% if user.is_authenticated %}
-        {% if user.profile.image %}
-           <img src="{{ user.profile.image.url }}" style="width: 30%;">
-        {% else %}
-           <img src="{% static 'image/no_image.jpg' %}" style="width: 30%;">
-        {% endif %}
-        <p>Username: {{ user.username }}</p>
-        <p>Email: {{ user.email }}</p>
+ <button type="button" class="btn btn-info">
+     <a href="{% url 'eventcalender:home' %}" style="color: #fff;"> Home</a>
+ </button>
+<button type="button" class="btn btn-dark">
+ <a href="{% url 'accounts:profile_edit' %}" style="color: #fff;"> Edit Profile</a>
+</button>
+<button type="button" class="btn btn-info">
+ <a href="{% url 'accounts:password_change' %}" style="color: #fff;"> Change Password</a>
+</button>
+<button type="button" class="btn btn-dark">
+ <a href="{% url 'accounts:password_reset' %}" style="color: #fff;"> Rest Password</a>
+</button>
 
-        <p>Address: {{ user.profile.address }}</p>
-        <p>Join Date: {{ user.profile.join_date }}</p>
-    {% else %}
-         <p>login to view your details </p>
-    {% endif %}
-{% endblock body %}
+<hr/>
+<div class="container">
+    <div class="row">
+        <div class="card" style="width: 18rem;margin: auto;">
+          <img class="card-img-top"
+               src="{% if profile.image %}{{profile.image.url}} {% else %} {% static 'img/avatar.png' %}{% endif %}" alt="Card image cap">
+        </div>
+
+        <i class="fa fa-arrow-circle-right" style="margin: auto;font-size: 38px;margin-left: 0;"></i>
+
+        <div class="card" style="width: 18rem;margin-right: 20px">
+          <div class="card-header">
+            Profile Summery
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Name: <span>{{profile}}</span></li>
+            <li class="list-group-item">Email: <span>{{profile.user.email}}</span></li>
+            <li class="list-group-item">Phone: <span>{{profile.phone_number}}</span></li>
+            <li class="list-group-item">Address: <span>{{profile.city}}</li>
+          </ul>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="card w-100 mt-5">
+             <div class="card-header">
+                List View Events
+              </div>
+            {% for event in all_event  %}
+             <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url 'eventcalender:list' %}{{ event.id }}">Title Event: {{event.title}}</a>
+                </h5>
+                <p class="card-text">Description: {{event.description }}</p>
+                <p class="card-text">User: {{event.user.username}}</p>
+                <p class="card-text"> Date: {{event.date}} | Time: {{event.time}}</p>
+             </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock content %}

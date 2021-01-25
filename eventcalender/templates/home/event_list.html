@@ -1,7 +1,23 @@
-<h1>Event List</h1><hr/>
+{% extends "base.html" %}
+{% load static %}
 
-{% for event in eventlist %}
-<a href="{{ event.id }}"><h3>{{ event.title }} : Detail</h3></a><br>
+{% block content %}
+ <button type="button" class="btn btn-dark"><a class="even_link" href="{% url 'eventcalender:list' %}">Event List</a></button>
+  <button type="button" class="btn btn-dark"><a class="even_link" href="{% url 'eventcalender:create' %}">Create Event</a></button><br/><hr/>
 
+<h1>Event List</h1><br/><hr/>
+<div class="container">
+    <div class="row">
+        {% for event in eventlist %}
+        <div class="card" style="width: 18rem;margin-right: 20px;margin-bottom: 14px;">
+          <div class="card-body">
+            <h5 class="card-title">{{ event.title }}</h5>
+            <p class="card-text">Details of event and subscribers.</p>
+            <a href="{% url 'eventcalender:detail' event.id %}" class="card-link">Detail Event</a>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
-{% endfor %}
+{% endblock %}

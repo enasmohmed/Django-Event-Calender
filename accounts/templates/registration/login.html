@@ -1,10 +1,11 @@
-
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
 {% block content %}
 
  <!-- Cart view section -->
  <section id="aa-myaccount">
    <div class="container">
-     <div class="row">
        <div class="col-md-12">
         <div class="aa-myaccount-area">
             <div class="row">
@@ -16,7 +17,7 @@
                   </p>
                  <form action="" class="aa-login-form" method="post">
                     {% csrf_token %}
-                     {{ form.as_p }}
+                     {{ form| as_bootstrap }}
                     <button type="submit" class="aa-browse-btn">Login</button><br><br><hr>
                      <a href="{% url 'accounts:signup' %}">Don't have an account?</a>
                     <p class="aa-lost-password" style="text-align: right;margin-top: -21px;"><a href="{% url 'accounts:password_reset' %}">Reset password?</a></p>
@@ -26,7 +27,6 @@
             </div>
          </div>
        </div>
-     </div>
    </div>
  </section>
  <!-- / Cart view section -->

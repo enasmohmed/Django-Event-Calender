@@ -1,8 +1,19 @@
-{% block body %}
-<h1>Edit Profile</h1><br/><hr/>
-  <form method="post" action="/accounts/profile/">
+{% extends "base.html" %}
+{% load static %}
+
+{% load bootstrap4 %}
+{% block content %}
+<button type="button" class="btn btn-info"><a class="even_link" href="{% url 'eventcalender:list' %}">Home</a></button>
+<hr/>
+<h1>Edit Profile</h1><br/>
+
+ <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-   </form>
-{% endblock %}
+    {% bootstrap_form userform %}
+    {% bootstrap_form profileform %}
+    {% buttons %}
+
+        <button class="btn btn-success w-100" type="submit">Save</button>
+    {% endbuttons %}
+</form>
+{% endblock content %}

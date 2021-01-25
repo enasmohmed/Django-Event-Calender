@@ -1,31 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
 {% block content %}
 
  <!-- Cart view section -->
- <section id="aa-myaccount">
    <div class="container">
      <div class="row">
-       <div class="col-md-12">
-        <div class="aa-myaccount-area">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="aa-myaccount-register">
-                 <h4>Register</h4>
-                   <p class="section-description">
-                        Please fill in this form to create an account.
-                   </p>
-                 <form action="" class="aa-login-form" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="aa-browse-btn">Register</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-         </div>
-       </div>
+         <div class="aa-myaccount-register">
+             <h4>Register</h4>
+               <p class="section-description">
+                    Please fill in this form to create an account.
+               </p>
+             <form action="" class="aa-login-form" method="post">
+                {% csrf_token %}
+                {{ form|as_bootstrap }}
+                <button type="submit" class="aa-browse-btn">Register</button>
+              </form>
+        </div>
      </div>
    </div>
- </section>
  <!-- / Cart view section -->
 
 

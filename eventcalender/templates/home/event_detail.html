@@ -1,12 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 <h1>Event Detail</h1><hr/>
-<a href="{% url 'eventcalender:home' %}">Home</a><br><br/>
-<a href="{% url 'eventcalender:update' event_detail.id %}">Edit Event</a><br><br/>
-<a href="{% url 'eventcalender:delete' event_detail.id %}">Delete Event</a><br>
-<a href="{% url 'eventcalender:add_member'  event_detail.id %}">Add Member</a><br><br>
-<a href="{% url 'eventcalender:remove_event'  event_detail.id %}">Remove Member</a><br><br>
+<button type="button" class="btn btn-info"><a class="even_link" href="{% url 'eventcalender:home' %}">Home</a></button>
+<button type="button" class="btn btn-info"><a class="even_link" href="{% url 'eventcalender:update' event.id %}">Edit Event</a></button>
+<button type="button" class="btn btn-info"><a class="even_link" href="{% url 'eventcalender:add_member'  event.id %}">Add Amount of Participants</a></button><hr/>
+<div class="container">
+    <div class="row">
+        <div class="card w-100">
+          <div class="card-body">
+            <h5 class="card-title">Title: {{ event.title }}</h5>
+            <p class="card-text">Date: {{ event.date }}</p>
+            <p class="card-text">Description: {{ event.description }}</p>
+          </div>
+        </div>
+    </div>
+</div>
+<br/><br/>
 
-    <h3>Title: {{ event_detail.title }}</h3>
-    <p>Description: {{ event_detail.description }}</p>
-    <p>Date: {{ event_detail.date }}</p>
-    <p>Time: {{ event_detail.time }}</p><hr/>
+    <div class="row">
+      {% for member in eventmember %}
+            <div class="card col-md-4" style="margin-left: 14px;">
+              <div class="card-header">
+                Amount of Participants: {{ forloop.counter }}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">User Name: {{ member.user.username }}</h5>
+                <p class="card-text">Email: {{ member.user.email }}</p>
+                <a href="{% url 'eventcalender:remove_event' member.id %}" class="btn btn-primary">Remove Member</a>
+              </div>
+            </div>
+       {% endfor %}
+    </div>
+
+
+
+{% endblock %}
+
 

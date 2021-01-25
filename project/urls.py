@@ -20,9 +20,9 @@ from project import settings
 
 
 urlpatterns = [
+    path('', include('accounts.urls', namespace='accounts')),
     path('admin/', admin.site.urls),
     path('', include('eventcalender.urls', namespace='eventcalender')),
-    path('', include('accounts.urls', namespace='accounts')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
